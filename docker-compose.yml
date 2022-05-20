@@ -1,22 +1,23 @@
-version: '3'
-services:
-  postgres:
-    image: "postgres"
-    environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=root      
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./postgres-data:/var/lib/postgresql/data  
+version: "3.7"
 
-  pgadmin-compose:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "admin@admin.com"
-      PGADMIN_DEFAULT_PASSWORD: "root"
+services:
+  db:
+    build:
+      context: .
+      dockerfile: .dockerfile
+    image: github.com/guilhermesoaresmarques/api-jwt-books
+    container_name: db-apijwt-books
+    restart: unless-stopped
+    tty: true
     ports:
-      - "54321:80"
-    depends_on:
-      - postgres
+      - "25432:5432"
+    environment:
+      POSTGRES_DB: books
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+      PGDATA: /var/lib/postgresql/data/webapi-mvc
+    volumes:
+      - webapi-mvc:/var/lib/postgresql/data
+
+volumes:
+  webapi-mvc:
